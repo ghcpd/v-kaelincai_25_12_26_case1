@@ -1,0 +1,301 @@
+# Role & Objective
+
+You are a senior software engineer tasked with fixing a critical bug in an AVL tree implementation used for database indexing, creating the fixed version in a new workspace directory, and executing comprehensive validation to ensure all functionality works correctly.
+
+# Inputs & Context
+
+## Source Project Location
+- Buggy project located at: `./issue_project/`
+- Contains AVL tree implementation with LR rotation bug
+- Includes failing unit and integration tests
+
+## Target Workspace
+- Create all fixed project files under: `C:\BugBash\workSpace2\oswe-mini-prime-new`
+- Must create subdirectory: `issue_project_fixed/` for the corrected implementation
+
+## Project Background
+This project implements a user database management system using AVL tree indexing for O(log n) performance. The AVL tree maintains balance through four rotation types (LL, RR, LR, RL). A bug exists in the Left-Right (LR) rotation causing tree structure corruption, balance property loss, performance degradation to O(n), and potential data loss.
+
+## Current Project Structure
+```
+./issue_project/
+├── src/
+│   ├── __init__.py
+│   ├── avl_tree.py          # Contains the bug in LR rotation (lines 128-132)
+│   └── user_database.py     # Database implementation using AVL tree
+├── tests/
+│   ├── __init__.py
+│   ├── test_avl_tree.py     # Unit tests - currently FAILING
+│   └── test_user_database.py # Integration tests - currently FAILING
+├── README.md
+├── requirements.txt
+└── KNOWN_ISSUE.md           # Detailed bug description
+```
+
+# Step-by-Step Instructions
+
+## Phase 1: Analysis & Understanding
+
+1. Read `./issue_project/KNOWN_ISSUE.md` to understand the complete bug description
+2. Examine `./issue_project/src/avl_tree.py`, specifically:
+   - The `_insert_recursive()` method
+   - Lines 128-132 (the buggy LR rotation case)
+   - Current incorrect implementation:
+     ```python
+     # Left-Right (LR) case - **BUG IS HERE**
+     if balance > 1 and key > node.left.key:
+         node = self.right_rotate(node)
+         node.left = self.left_rotate(node.left)
+         return node
+     ```
+3. Review `./issue_project/tests/test_avl_tree.py` to understand failing test cases
+4. Compare with the correctly implemented RL (Right-Left) rotation case to understand the symmetric logic
+
+## Phase 2: Create Fixed Project Structure
+
+Create the following directory structure at `C:\BugBash\workSpace2\oswe-mini-prime-new\issue_project_fixed\`:
+
+```
+issue_project_fixed/
+├── src/
+│   ├── __init__.py
+│   ├── avl_tree.py          # FIXED VERSION with corrected LR rotation
+│   └── user_database.py     # Copy from original (no changes needed)
+├── tests/
+│   ├── __init__.py
+│   ├── test_avl_tree.py     # Copy from original
+│   └── test_user_database.py # Copy from original
+├── README.md                # Updated to indicate this is the fixed version
+├── requirements.txt         # Copy from original
+└── FIX_SUMMARY.md          # NEW FILE documenting your fix
+```
+
+## Phase 3: Implement the Fix
+
+1. In `issue_project_fixed/src/avl_tree.py`:
+   - Locate the LR rotation case (around lines 128-132)
+   - Determine the correct rotation sequence (hint: compare with RL case and apply symmetric logic)
+   - Fix the rotation order to perform: 
+     - FIRST: left-rotate the left child (straighten the zig-zag)
+     - SECOND: right-rotate the parent (balance the tree)
+   - Add clear comments explaining the correct implementation
+   - Do NOT modify LL, RR, or RL rotations (they are correct)
+
+2. Copy all other files from `./issue_project/` to `issue_project_fixed/`:
+   - `src/user_database.py` (no changes)
+   - All test files (no changes)
+   - `requirements.txt` (no changes)
+   - `src/__init__.py` and `tests/__init__.py`
+
+3. Update `issue_project_fixed/README.md`:
+   - Change title to indicate this is the FIXED version
+   - Remove or update the "Known Issues" section
+   - Add section mentioning this is the corrected version
+
+## Phase 4: Document the Fix
+
+Create `issue_project_fixed/FIX_SUMMARY.md` with the following structure:
+
+```markdown
+# Fix Summary: AVL Tree LR Rotation Bug
+
+## Problem Identified
+[Describe what was wrong with the original implementation]
+
+## Root Cause
+[Explain why the wrong rotation order caused the bug]
+
+## Solution Implemented
+[Describe the fix - what changed and why]
+
+## Code Changes
+**File**: src/avl_tree.py
+**Method**: _insert_recursive()
+**Lines Changed**: [specify line numbers]
+
+### Before (Buggy):
+```python
+[paste buggy code]
+```
+
+### After (Fixed):
+```python
+[paste fixed code]
+```
+
+## Verification
+[Explain how you verified the fix works]
+
+- Test results before fix: [list failing tests]
+- Test results after fix: [list passing tests]
+
+## Technical Explanation
+[Explain the correct LR rotation algorithm and why this order is necessary]
+```
+
+## Phase 5: Comprehensive Validation
+
+Execute the following validation steps from the `issue_project_fixed/` directory:
+
+1. **Run pytest verbose test suite**:
+   ```bash
+   cd C:\BugBash\workSpace2\oswe-mini-prime-new\issue_project_fixed
+   python -m pytest tests/ -v
+   ```
+   - Capture full output showing all 9 tests
+   - Verify all tests pass with 0 failures
+
+2. **Run unittest discovery**:
+   ```bash
+   python -m unittest discover tests -v
+   ```
+   - Capture output showing test execution
+   - Confirm all tests pass
+
+3. **Create and execute smoke test script**:
+   - Create `smoke_run.py` that exercises the UserDatabase API
+   - Include operations: add users, search by ID, verify tree balance
+   - Run the script and capture output
+   - Verify system launches without errors
+
+4. **Capture runtime environment information**:
+   ```bash
+   python -c "import pytest; print('pytest', pytest.__version__); import platform; print(platform.platform())"
+   ```
+
+5. **Collect and document all outputs**:
+   - Pytest verbose output (test names and PASSED status)
+   - Unittest discovery results
+   - Smoke test execution output
+   - Runtime environment details
+   - Any error traces (if failures occur)
+
+## Phase 6: Verification Summary
+
+Create a final validation report summarizing:
+- All commands executed
+- Complete test results (must show 9/9 tests passing)
+- Smoke test results confirming UserDatabase API works correctly
+- Runtime environment (Python version, OS, pytest version)
+- Explicit statement: "All automated test cases passed (9/9). The system launches successfully and behaves correctly under all provided test scenarios."
+
+# Output Specification
+
+## Directory Structure
+Complete fixed project at: `C:\BugBash\workSpace2\oswe-mini-prime-new\issue_project_fixed/`
+
+## Key Deliverables
+
+1. **Fixed source code**:
+   - `src/avl_tree.py` with corrected LR rotation including explanatory comments
+   - All other source files copied unchanged
+
+2. **Documentation**:
+   - `FIX_SUMMARY.md` - comprehensive fix documentation
+   - `README.md` - updated to indicate fixed version
+
+3. **Test files**:
+   - All original test files copied unchanged to `tests/`
+
+4. **Validation artifacts**:
+   - `smoke_run.py` - smoke test script
+   - Test execution logs and outputs
+   - Validation summary report
+
+## Expected Test Results Format
+
+```
+test_lr_rotation_basic ... ok
+test_lr_rotation_with_search ... ok
+test_lr_rotation_complex_sequence ... ok
+test_lr_rotation_performance ... ok
+test_ll_rotation ... ok
+test_rr_rotation ... ok
+test_rl_rotation ... ok
+test_user_database_lr_scenario ... ok
+test_bulk_user_insertion ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in X.XXXs
+
+OK
+```
+
+# Constraints & Preferences
+
+## Must Do Requirements
+- Create fixed project in NEW directory at specified workspace path
+- Fix ONLY the LR rotation bug (do not modify LL, RR, or RL rotations)
+- Ensure ALL 9 tests pass after the fix
+- Create comprehensive FIX_SUMMARY.md documenting all changes
+- Add clear code comments explaining the correct rotation order
+- Preserve all original test files unchanged
+- Execute complete validation suite (pytest, unittest, smoke test)
+- Capture all outputs, logs, and execution results
+- Provide explicit confirmation that all tests passed
+
+## Must NOT Do
+- Do NOT modify the original `./issue_project/` directory
+- Do NOT change any test files (they are correct)
+- Do NOT modify LL, RR, or RL rotation implementations (they are correct)
+- Do NOT add new dependencies or significantly change project structure
+- Do NOT proceed if any test fails - investigate and fix first
+
+## Code Quality Standards
+- Maintain the same code style as the original implementation
+- Keep comments clear and concise
+- Ensure proper indentation and formatting (follow Python best practices)
+- Use descriptive variable names
+- Follow PEP 8 style guidelines
+
+# Quality Gates
+
+## Success Criteria - All Must Be Met
+
+1. ✅ New directory `issue_project_fixed/` created at `C:\BugBash\workSpace2\oswe-mini-prime-new\`
+2. ✅ LR rotation bug fixed with correct operation sequence
+3. ✅ ALL unit tests pass (9/9 tests, 0 failures)
+4. ✅ ALL integration tests pass (0 failures)
+5. ✅ Tree remains balanced after LR rotations (verified by tests)
+6. ✅ Search operations work correctly after rotations
+7. ✅ Tree height remains logarithmic O(log n)
+8. ✅ FIX_SUMMARY.md clearly documents the problem, root cause, and solution
+9. ✅ Code includes helpful comments explaining the fix
+10. ✅ System launches successfully without errors
+11. ✅ Smoke test executes successfully demonstrating correct API behavior
+12. ✅ All test outputs and logs captured and documented
+13. ✅ Explicit validation summary confirms all tests passed
+
+## Self-Verification Checklist
+
+Before completing, verify:
+- [ ] Read KNOWN_ISSUE.md and understood the bug thoroughly
+- [ ] Examined buggy code in src/avl_tree.py (lines 128-132)
+- [ ] Understood why current LR rotation order is incorrect
+- [ ] Analyzed RL rotation for symmetric logic reference
+- [ ] Created complete directory structure at specified workspace path
+- [ ] Fixed LR rotation with correct sequence (left-rotate child first, then right-rotate parent)
+- [ ] Added explanatory comments to fixed code
+- [ ] Copied all other files unchanged
+- [ ] Created comprehensive FIX_SUMMARY.md
+- [ ] Updated README.md to indicate fixed version
+- [ ] Executed pytest verbose - confirmed 9/9 tests pass
+- [ ] Executed unittest discovery - confirmed all tests pass
+- [ ] Created and ran smoke_run.py - confirmed API works correctly
+- [ ] Captured runtime environment information
+- [ ] Documented all outputs and execution logs
+- [ ] Provided explicit statement confirming all tests passed
+- [ ] Verified tree balance property maintained after fix
+- [ ] Confirmed no modifications to LL, RR, RL rotations
+
+## Critical Implementation Reminder
+
+The LR rotation fix requires understanding that:
+- LR case creates a "zig-zag" pattern (left child has right-heavy subtree)
+- Must perform TWO rotations in correct order:
+  1. FIRST: left-rotate the left child (straightens zig-zag to left-left pattern)
+  2. SECOND: right-rotate the parent (balances the tree)
+- Incorrect order (as in buggy code) breaks tree structure and balance
+- Compare with RL case which correctly does: right-rotate right child, then left-rotate parent
+
+Execute all steps systematically. Do not skip validation. Confirm all 9 tests pass before considering the task complete. The fix is simple but critical - ensure the rotation sequence is correct.
